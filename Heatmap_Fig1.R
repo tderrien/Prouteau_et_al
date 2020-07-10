@@ -1,10 +1,14 @@
-# R program 
+# July 2020
+# This R program is meant to be used to reproduce Fig1 of the paper.
+#####################################################################
+
+# Load library
 library(ComplexHeatmap)
 library(circlize)
-library(scales) # for calling color
+library(scales) 
 library(tidyverse)
 
-# import gene signatures for k = 2 
+# import gene signatures for k = 2 : as given by the Supplementary table 3
 genes=rbind(
    data.frame(NMFgeneSign = rep("1", length(rownames(datmad[k2l1,])) ), 
                     RLOC_id     = rownames(datmad[k2l1,])
@@ -14,9 +18,15 @@ data.frame(NMFgeneSign = rep("2", length(rownames(datmad[k2l2,])) ),
                     )
 )
 
-# Extraction genes from matrice
-#dat_sign <- subset(datmad, rownames(datmad) %in% genes$RLOC_id)
+# Extraction genes from expression matrice 
 dat_sign = datmad [match( genes$RLOC_id, rownames(datmad)), ]
+
+# Important diganostic data from Supp table "Table32RNAseq-30-05"
+############################
+diag = read.table("Table32RNAseq-30-05.txt", h=T, stringsAsFactors=F)
+diag = diag %>% mutate(temp=sample_id) %>% separate(temp, c("dog_id", "breed")) # add breed and dog_id column
+diag = diag[match( colnames(dat), diag$sample_id), ] #  reorder rows of diag according to colnames (dat)
+
 
 #######################################################################################
 # Annotation
@@ -57,7 +67,6 @@ Heatmap (t(scale(t(dat_sign))),
   column_names_gp = gpar(fontsize = 9), 
   
   cluster_rows = FALSE,      # need to be reordered
-#  row_km=2,                  # kmeans clustering of rows
   show_row_dend    = FALSE,
   show_row_names   = FALSE,
 heatmap_legend_param = list(title = "NormExpr"),
