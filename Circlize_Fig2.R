@@ -87,7 +87,6 @@ circos.genomicTrackPlotRegion(dat.clean,
 
 ## Draw SVs
 typeE=c("DEL","DUP","INS","INV")
-#typeE=c("DEL","DUP")
 colE=c("blue","red","orange","green")
 for (i in 1:4) { 
         bed_list=svtable[svtable$SVTYPE==typeE[i],]
